@@ -1,24 +1,17 @@
-# Task 2 – Secure CI/CD Pipeline
+## Security Gate Policy
 
-## Security Gates
+| Gate | Policy |
+|------|--------|
+| Semgrep | Block on HIGH findings |
+| Gitleaks | Block on any detected secrets |
+| Trivy Filesystem | Block on HIGH/CRITICAL application dependency vulnerabilities |
+| Trivy Image | Report HIGH/CRITICAL vulnerabilities; do not block if they originate from the base image and no upstream fix is available. These are tracked until a patched base image is released. |
 
-| Stage | Tool | Policy |
-|--------|------|--------|
-| SAST | Semgrep | Fail on HIGH findings |
-| Secret Scan | Gitleaks | Fail if secrets detected |
-| Dependency Scan | Trivy FS | Fail on HIGH/CRITICAL CVEs |
-| Image Scan | Trivy Image | Fail on HIGH/CRITICAL CVEs |
-| Image Signing | Cosign | Fail if signing fails |
+## Handling CVEs Without a Fix
 
-## CVE Policy
+If a vulnerability exists only in the upstream base image and no patched image is available:
 
-If a CVE has no available fix:
-
-- Document the risk.
-- Apply compensating controls.
-- Monitor vendor advisories.
-- Upgrade once a fix is available.
-
-## GitOps
-
-ArgoCD is configured with automated sync, pruning, and self-healing to ensure the cluster state always matches Git.
+- Record the finding.
+- Monitor upstream releases.
+- Rebuild using the patched base image once available.
+- Apply compensating controls such as non-root execution, minimal image, read-only filesystem, and network restrictions.
