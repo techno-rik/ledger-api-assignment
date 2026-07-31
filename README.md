@@ -1,14 +1,81 @@
-# ledger-api
+# Ledger API Assignment
 
-Payments microservice for tokenising PANs and serving transaction metadata.
-Deployed on Kubernetes in the `payments` namespace.
+## Overview
 
-## Endpoints
+Brief description of the project.
 
-| Method | Path            | Description                          |
-|--------|-----------------|--------------------------------------|
-| GET    | `/health`       | Liveness check                       |
-| POST   | `/tokenize`     | `{"pan": "..."}` → opaque token      |
-| GET    | `/transactions` | Recent transaction records           |
-| POST   | `/import`       | Import a YAML configuration blob     |
-| GET    | `/fetch?url=`   | Fetch a remote resource by URL       |
+## Architecture
+
+- Kubernetes
+- Istio Service Mesh
+- GitHub Actions
+- Container Security
+
+## Task 1 – Kubernetes Hardening
+
+- Namespace
+- RBAC
+- ServiceAccount
+- ConfigMap
+- Secret
+- Resource requests/limits
+- Liveness & Readiness probes
+- SecurityContext
+- NetworkPolicy
+- Ingress
+
+## Task 2 – Secure CI/CD
+
+- GitHub Actions
+- Semgrep
+- Gitleaks
+- Trivy Filesystem Scan
+- Docker Build
+- Trivy Image Scan
+- Push to GHCR
+
+## Task 3 – Istio Security
+
+### Sidecar Injection
+
+Explain how namespace injection was enabled.
+
+### mTLS
+
+Explain PeerAuthentication STRICT mode.
+
+### AuthorizationPolicy
+
+Explain only the reporting service can call ledger-api.
+
+### Certificate Rotation
+
+Istio automatically provisions and rotates workload certificates using istiod.
+
+### NetworkPolicy vs AuthorizationPolicy
+
+(Table)
+
+## Testing
+
+### Allowed
+
+reporting → ledger-api ✅
+
+### Denied
+
+test pod → ledger-api ❌ (RBAC)
+
+## Screenshots
+
+(Add screenshots)
+
+## Repository Structure
+
+(tree)
+
+## Future Improvements
+
+- Cosign image signing
+- SLSA provenance
+- GitOps deployment

@@ -1,17 +1,26 @@
-## Security Gate Policy
+# Task 2 – Secure CI/CD Pipeline
 
-| Gate | Policy |
-|------|--------|
-| Semgrep | Block on HIGH findings |
-| Gitleaks | Block on any detected secrets |
-| Trivy Filesystem | Block on HIGH/CRITICAL application dependency vulnerabilities |
-| Trivy Image | Report HIGH/CRITICAL vulnerabilities; do not block if they originate from the base image and no upstream fix is available. These are tracked until a patched base image is released. |
+## Objective
 
-## Handling CVEs Without a Fix
+Create a GitHub Actions pipeline with integrated security scanning.
 
-If a vulnerability exists only in the upstream base image and no patched image is available:
+## Pipeline
 
-- Record the finding.
-- Monitor upstream releases.
-- Rebuild using the patched base image once available.
-- Apply compensating controls such as non-root execution, minimal image, read-only filesystem, and network restrictions.
+1. Checkout Source
+2. Setup Python
+3. Semgrep (SAST)
+4. Gitleaks (Secret Scan)
+5. Trivy Filesystem Scan
+6. Docker Build
+7. Trivy Image Scan
+8. Push Image to GHCR
+
+## Security Tools
+
+- Semgrep
+- Gitleaks
+- Trivy
+
+## Result
+
+The CI pipeline automates application security checks before publishing container images.
