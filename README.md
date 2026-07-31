@@ -1,4 +1,22 @@
-# Ledger API Assignment
+# Ledger API DevSecOps Assessment
+
+![GitHub Actions](https://img.shields.io/github/actions/workflow/status/techno-rik/ledger-api-assignment/build.yml?branch=main&label=CI&logo=githubactions)
+
+![Kubernetes](https://img.shields.io/badge/Kubernetes-v1.33-blue?logo=kubernetes)
+
+![Istio](https://img.shields.io/badge/Istio-Service%20Mesh-466BB0?logo=istio)
+
+![Docker](https://img.shields.io/badge/Docker-Container-2496ED?logo=docker&logoColor=white)
+
+![Python](https://img.shields.io/badge/Python-3.9-3776AB?logo=python&logoColor=white)
+
+![License](https://img.shields.io/badge/License-MIT-green)
+
+![GitHub last commit](https://img.shields.io/github/last-commit/techno-rik/ledger-api-assignment)
+
+![Repo size](https://img.shields.io/github/repo-size/techno-rik/ledger-api-assignment)
+
+![Issues](https://img.shields.io/github/issues/techno-rik/ledger-api-assignment)
 
 ## Overview
 
