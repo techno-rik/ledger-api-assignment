@@ -2,80 +2,155 @@
 
 ## Overview
 
-Brief description of the project.
+This repository contains the implementation of a secure DevSecOps workflow for the Ledger API application. The assignment demonstrates Kubernetes deployment hardening, a secure CI/CD pipeline, and service-to-service security using Istio.
 
-## Architecture
+---
 
-- Kubernetes
+# Architecture
+
+The solution consists of:
+
+- Kubernetes (Kind Cluster)
+- Ledger API Deployment (3 replicas)
+- Reporting Service
+- Kubernetes Service (ClusterIP)
 - Istio Service Mesh
-- GitHub Actions
-- Container Security
+- GitHub Actions CI/CD
+- GitHub Container Registry (GHCR)
 
-## Task 1 – Kubernetes Hardening
+---
 
-- Namespace
-- RBAC
-- ServiceAccount
+# Task 1 – Kubernetes Hardening
+
+The application was deployed following Kubernetes security best practices.
+
+### Implemented
+
+- Dedicated Namespace
 - ConfigMap
 - Secret
-- Resource requests/limits
-- Liveness & Readiness probes
-- SecurityContext
-- NetworkPolicy
+- ServiceAccount
+- Role & RoleBinding (RBAC)
+- Deployment with 3 replicas
+- ClusterIP Service
 - Ingress
+- NetworkPolicy
+- Resource Requests & Limits
+- Liveness Probe
+- Readiness Probe
+- SecurityContext
 
-## Task 2 – Secure CI/CD
+**Result**
 
-- GitHub Actions
-- Semgrep
-- Gitleaks
-- Trivy Filesystem Scan
-- Docker Build
-- Trivy Image Scan
-- Push to GHCR
+The application was successfully deployed to the Kind cluster with all required hardening controls enabled.
 
-## Task 3 – Istio Security
+---
 
-### Sidecar Injection
+# Task 2 – Secure CI/CD Pipeline
 
-Explain how namespace injection was enabled.
+A GitHub Actions pipeline was implemented to automate build and security validation.
 
-### mTLS
+## Pipeline Steps
 
-Explain PeerAuthentication STRICT mode.
+1. Checkout Repository
+2. Setup Python
+3. Semgrep Static Analysis
+4. Gitleaks Secret Scan
+5. Trivy Filesystem Scan
+6. Docker Image Build
+7. Trivy Image Scan
+8. Push Image to GitHub Container Registry (GHCR)
 
-### AuthorizationPolicy
+## Security Tools
 
-Explain only the reporting service can call ledger-api.
+- Semgrep (SAST)
+- Gitleaks (Secret Detection)
+- Trivy (Filesystem & Container Vulnerability Scanning)
 
-### Certificate Rotation
+---
 
-Istio automatically provisions and rotates workload certificates using istiod.
+# Task 3 – Istio Service Mesh Security
 
-### NetworkPolicy vs AuthorizationPolicy
+## Sidecar Injection
 
-(Table)
+Automatic sidecar injection was enabled for the `payments` namespace, allowing Envoy proxies to be injected into each workload.
 
-## Testing
+## mTLS
 
-### Allowed
+STRICT PeerAuthentication was configured to ensure encrypted and authenticated service-to-service communication inside the service mesh.
 
-reporting → ledger-api ✅
+## AuthorizationPolicy
 
-### Denied
+An Istio AuthorizationPolicy was created to allow only workloads using the **reporting** ServiceAccount to access the Ledger API.
 
-test pod → ledger-api ❌ (RBAC)
+## Certificate Rotation
 
-## Screenshots
+Istio automatically provisions short-lived X.509 certificates through `istiod`. Certificates are rotated automatically before expiration, and all workloads trust the mesh root CA for mutual authentication.
 
-(Add screenshots)
+## NetworkPolicy vs AuthorizationPolicy
 
-## Repository Structure
+| NetworkPolicy | AuthorizationPolicy |
+|---------------|---------------------|
+| Controls Layer 3/4 network traffic | Controls Layer 7 service authorization |
+| Based on IPs and ports | Based on workload identity and HTTP attributes |
+| Enforced by Kubernetes CNI | Enforced by Istio Envoy sidecars |
+| Restricts network connectivity | Restricts application-level access |
 
-(tree)
+---
 
-## Future Improvements
+# Testing
 
-- Cosign image signing
-- SLSA provenance
-- GitOps deployment
+## Authorized Communication
+
+The Reporting service successfully communicated with the Ledger API through the Kubernetes Service, confirming successful service discovery and Istio mTLS.
+
+**Result:** Allowed
+
+---
+
+## Unauthorized Communication
+
+A temporary test pod attempted to access the Ledger API and was denied by the Istio AuthorizationPolicy.
+
+**Result:** RBAC Access Denied
+
+---
+
+# Screenshots
+
+The repository includes screenshots demonstrating:
+
+- Kubernetes deployment
+- GitHub Actions workflow
+- Semgrep scan
+- Trivy scans
+- Istio PeerAuthentication
+- AuthorizationPolicy
+- Authorized service communication
+- Unauthorized access blocked by RBAC
+
+Screenshots are available in the `screenshots/` directory.
+
+---
+
+# Repository Structure
+
+```
+app/
+deploy/
+docs/
+reports/
+screenshots/
+.github/workflows/
+README.md
+```
+
+---
+
+# Future Improvements
+
+- Container image signing using Cosign
+- SLSA build provenance
+- GitOps deployment with Argo CD
+- Continuous policy enforcement with Kyverno
+- Runtime threat detection using Falco
