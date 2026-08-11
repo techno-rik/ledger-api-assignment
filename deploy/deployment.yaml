@@ -31,7 +31,7 @@ spec:
       containers:
       - name: ledger-api
 
-        image: ledger-api:does-not-exist
+        image: ledger-api:starter
         imagePullPolicy: IfNotPresent
 
         ports:
